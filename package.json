@@ -1,0 +1,37 @@
+{
+  "name": "scoot-kidd-classics",
+  "version": "1.0.0",
+  "description": "Automated manuscript generation using n8n, Claude Code, and Puppeteer",
+  "main": "index.js",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "n8n": "n8n",
+    "dev": "nodemon scripts/automation.js",
+    "test-puppeteer": "node scripts/test-browser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottmcquaig/scoot-kidd-classics.git"
+  },
+  "keywords": [
+    "n8n",
+    "claude",
+    "puppeteer",
+    "automation",
+    "writing"
+  ],
+  "author": "Scott McQuaig",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^21.0.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "dotenv": "^16.0.3",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "name": "Claude Manuscript Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate book ideas\nconst bookIdeas = [\n  {\n    title: \"The Stoic Trader\",\n    genre: \"Finance/Philosophy\",\n    tone: \"SWGSZN meets Marcus Aurelius\"\n  },\n  {\n    title: \"Digital Discipline\",\n    genre: \"Self-Help/Tech\",\n    tone: \"Silicon Valley stoicism\"\n  },\n  {\n    title: \"The Arena of Life\",\n    genre: \"Philosophy/Sports\",\n    tone: \"Competitive philosophy\"\n  }\n];\n\n// Select a random book idea\nconst selectedIdea = bookIdeas[Math.floor(Math.random() * bookIdeas.length)];\n\nreturn {\n  json: {\n    bookIdea: selectedIdea,\n    timestamp: new Date().toISOString(),\n    prompt: `Create a detailed outline for a book titled \"${selectedIdea.title}\" in the ${selectedIdea.genre} genre. The tone should be ${selectedIdea.tone}. Include 10 chapters with compelling titles and brief descriptions.`\n  }\n};"
+      },
+      "id": "generate-idea",
+      "name": "Generate Book Idea",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://browserless:3000/function",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "token",
+              "value": "={{$credentials.browserlessToken}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"code\": \"{{ $json.browserlessFunction }}\",\n  \"data\": {\n    \"sessionCookie\": \"{{ $env.CLAUDE_SESSION_COOKIE }}\",\n    \"prompt\": \"{{ $json.prompt }}\",\n    \"timeout\": 120000\n  }\n}",
+        "options": {}
+      },
+      "id": "claude-request",
+      "name": "Send to Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "1",
+          "name": "Browserless Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse Claude's response and prepare chapter prompts\nconst claudeResponse = items[0].json.response;\nconst outline = claudeResponse; // Parse outline from response\n\n// Generate prompts for each chapter\nconst chapters = [];\n// This would parse the outline and create individual chapter prompts\n// For now, returning a simplified version\n\nreturn {\n  json: {\n    outline: outline,\n    nextStep: \"chapters\",\n    chapterCount: 10\n  }\n};"
+      },
+      "id": "process-outline",
+      "name": "Process Outline",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "split-chapters",
+      "name": "Split Chapters",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Manuscript Generation Complete!\\n\\n- **Title**: {{ $json.title }}\\n- **Chapters**: {{ $json.chapterCount }}\\n- **Status**: {{ $json.status }}\\n- **Repository**: https://github.com/scottmcquaig/scoot-kidd-classics",
+        "options": {}
+      },
+      "id": "success-notification",
+      "name": "Success Notification",
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "push",
+        "owner": "scottmcquaig",
+        "repository": "scoot-kidd-classics",
+        "filePath": "manuscripts/{{ $json.filename }}.md",
+        "fileContent": "{{ $json.content }}",
+        "commitMessage": "Add new manuscript: {{ $json.title }}",
+        "additionalParameters": {}
+      },
+      "id": "push-to-github",
+      "name": "Push to GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [1450, 300],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "2",
+          "name": "GitHub OAuth2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate Book Idea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Book Idea": {
+      "main": [
+        [
+          {
+            "node": "Send to Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Claude": {
+      "main": [
+        [
+          {
+            "node": "Process Outline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Outline": {
+      "main": [
+        [
+          {
+            "node": "Split Chapters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Chapters": {
+      "main": [
+        [
+          {
+            "node": "Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Success Notification": {
+      "main": [
+        [
+          {
+            "node": "Push to GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "1"
+}
