@@ -11,7 +11,28 @@ Leverage your Claude Code web credits to automatically generate manuscripts, boo
 - 📝 GitHub manuscript storage
 - ⏰ Scheduled content generation
 
-### Quick Start
+### 🚀 NEW: Autonomous Mode (Recommended!)
+
+Generate complete manuscripts while you sleep! No manual prompting required.
+
+```bash
+# Quick setup (5 minutes)
+npm install
+cp .env.example .env
+# Add your Claude session cookie to .env
+
+# Start generating (Mac/Linux)
+./run-autonomous.sh
+
+# Start generating (Windows)
+run-autonomous.bat
+```
+
+**See [AUTONOMOUS_SETUP.md](AUTONOMOUS_SETUP.md) for complete instructions.**
+
+---
+
+### Quick Start (Original n8n Setup)
 
 ```bash
 # Clone the repository
@@ -56,6 +77,7 @@ open http://localhost:5678
 4. Start generating!
 
 ### Documentation
+- **[Autonomous Setup Guide](AUTONOMOUS_SETUP.md) - ⭐ Start here! Fully autonomous manuscript generation**
 - [User Guide](USER_GUIDE.md) - Complete setup and usage instructions
 - [Setup Guide](n8n-setup-guide.md) - Original setup documentation
 - [Workflows](workflows/) - n8n workflow templates
@@ -63,15 +85,24 @@ open http://localhost:5678
 ### Project Structure
 ```
 scoot-kidd-classics/
-├── scripts/               # Automation scripts
-│   ├── claude-automation.js
-│   └── browserless-function.js
-├── workflows/             # n8n workflows
-├── manuscripts/          # Generated content
-├── n8n-data/            # n8n persistent data
-├── docker-compose.yml   # Service orchestration
-├── package.json        # Node dependencies
-└── USER_GUIDE.md      # Comprehensive guide
+├── scripts/                        # Automation scripts
+│   ├── autonomous-manuscript-generator.js  # ⭐ Main autonomous script
+│   ├── claude-automation.js        # Puppeteer browser automation
+│   └── browserless-function.js     # Browserless integration
+├── workflows/                      # n8n workflows
+│   ├── autonomous-manuscript-workflow.json
+│   └── claude-manuscript-workflow.json
+├── manuscripts/                    # Generated content
+│   ├── drafts/                    # Work in progress
+│   ├── completed/                 # Finished manuscripts
+│   └── outlines/                  # Book outlines
+├── ideas/                         # Manuscript ideas & templates
+│   └── manuscript-ideas.json      # Book concepts & settings
+├── run-autonomous.sh              # ⭐ Quick start script (Mac/Linux)
+├── run-autonomous.bat             # ⭐ Quick start script (Windows)
+├── AUTONOMOUS_SETUP.md            # ⭐ Autonomous setup guide
+├── docker-compose.yml             # Service orchestration
+└── package.json                   # Node dependencies
 ```
 
 ### License
