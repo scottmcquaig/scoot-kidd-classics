@@ -1,0 +1,40 @@
+{
+  "manuscripts": [
+    {
+      "id": "stoic-trader",
+      "title": "The Stoic Trader",
+      "genre": "Finance/Philosophy",
+      "tone": "SWGSZN meets Marcus Aurelius",
+      "targetWordCount": 50000,
+      "chapters": 12,
+      "description": "A modern guide to maintaining composure and discipline in volatile markets",
+      "status": "idea"
+    },
+    {
+      "id": "digital-discipline",
+      "title": "Digital Discipline",
+      "genre": "Self-Help/Tech",
+      "tone": "Silicon Valley stoicism",
+      "targetWordCount": 45000,
+      "chapters": 10,
+      "description": "Ancient philosophy meets modern technology - building mental resilience in the digital age",
+      "status": "idea"
+    },
+    {
+      "id": "arena-of-life",
+      "title": "The Arena of Life",
+      "genre": "Philosophy/Sports",
+      "tone": "Competitive philosophy",
+      "targetWordCount": 40000,
+      "chapters": 10,
+      "description": "Applying competitive sports mindset to life's challenges through a stoic lens",
+      "status": "idea"
+    }
+  ],
+  "generationSettings": {
+    "chapterWordCount": 4000,
+    "style": "engaging, conversational yet philosophical",
+    "includeExamples": true,
+    "includeExercises": true
+  }
+}
