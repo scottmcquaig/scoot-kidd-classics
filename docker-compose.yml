@@ -21,6 +21,9 @@ services:
       - ./n8n-data:/home/node/.n8n
       - ./workflows:/workflows
       - ./scripts:/scripts
+      - ./manuscripts:/home/node/.n8n/manuscripts
+      - ./ideas:/home/node/.n8n/ideas
+      - ./.env:/scripts/.env
     networks:
       - n8n-network
 

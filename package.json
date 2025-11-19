@@ -9,7 +9,10 @@
     "logs": "docker-compose logs -f",
     "n8n": "n8n",
     "dev": "nodemon scripts/automation.js",
-    "test-puppeteer": "node scripts/test-browser.js"
+    "test-puppeteer": "node scripts/test-browser.js",
+    "generate": "node scripts/autonomous-manuscript-generator.js",
+    "generate:continuous": "node scripts/autonomous-manuscript-generator.js --continuous",
+    "generate:background": "nohup node scripts/autonomous-manuscript-generator.js --continuous > logs/generation.log 2>&1 &"
   },
   "repository": {
     "type": "git",
